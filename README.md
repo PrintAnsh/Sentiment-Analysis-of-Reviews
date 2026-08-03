@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Sentiment Analysis of Reviews
 
 **Intern ID:** CITS7491
