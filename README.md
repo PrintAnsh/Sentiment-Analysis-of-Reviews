@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Sentiment Analysis of Reviews
 
 **Intern ID:** CITS7491
@@ -304,3 +305,6 @@ This project is licensed under the [MIT License](LICENSE) - see the LICENSE file
 ---
 
 *This project was developed as part of an internship to demonstrate practical implementation of Sentiment Analysis using Machine Learning through an interactive web application.*
+=======
+# Email-Spam-Classifier
+>>>>>>> c525cad5995f92b8d95384c0b76dabf6de922205
