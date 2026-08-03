@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Realm of Echoes: The Sentiment Oracle (Indie Pixel World)</title>
+  
+  <!-- CSS Design System -->
+  <link rel="stylesheet" href="css/pixel-base.css">
+  <link rel="stylesheet" href="css/world.css">
+
+  <!-- External Libraries via High-Speed CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+</head>
+<body>
+
+  <!-- Top Scroll Progress Bar -->
+  <div id="scroll-progress" class="scroll-progress-bar"></div>
+
+  <!-- Floating World Interaction Prompt -->
+  <div id="world-interaction-prompt" class="interact-prompt" style="display: none; position: fixed; z-index: 600;">
+    E - Talk
+  </div>
+
+  <!-- Top Fixed Game HUD -->
+  <header class="game-top-bar">
+    <div class="game-title">
+      <div class="game-title-icon">⚔️</div>
+      <span>REALM OF ECHOES</span>
+    </div>
+
+    <div class="biome-tracker">
+      <span class="biome-step active" id="step-0">1. Forest</span>
+      <span class="biome-step" id="step-1">2. Village</span>
+      <span class="biome-step" id="step-2">3. Station</span>
+      <span class="biome-step" id="step-3">4. Lab</span>
+      <span class="biome-step" id="step-4">5. Shrine</span>
+      <span class="biome-step" id="step-5">6. Observatory</span>
+      <span class="biome-step" id="step-6">7. Spire</span>
+    </div>
+  </header>
+
+  <!-- HTML5 Pixel World Canvas -->
+  <canvas id="viewport-canvas"></canvas>
+
+  <!-- Continuous Scroll Game World -->
+  <main id="game-container">
+
+    <!-- 1. Forest Biome -->
+    <section id="biome-forest" class="biome-section" style="top: 0vh;">
+      <div class="biome-card">
+        <h2>🌲 Whispering Woodland</h2>
+        <p>Welcome to the <strong>Realm of Echoes</strong>. You are the <em>Sentiment Alchemist</em>. Walk near doors or NPCs and press <strong>[E]</strong> to enter buildings or talk!</p>
+        <div style="margin-top: 12px; font-family: var(--font-pixel); font-size: 9px; color: var(--neon-cyan);">
+          [ Scroll / Drag down to explore ]
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Village Biome -->
+    <section id="biome-village" class="biome-section" style="top: 100vh;">
+      <div class="biome-card world-interactable" onclick="app.interactNPC('Elder Oracle', '🧙‍♂️')">
+        <h2>🏘️ Sentiment Haven</h2>
+        <p>The villagers pass along rumors and whispers from travelers. Walk up to the Town Hall door to enter!</p>
+        <button class="pixel-btn pixel-btn-primary" onclick="app.interactNPC('Elder Oracle', '🧙‍♂️')">
+          💬 Speak with Elder
+        </button>
+      </div>
+    </section>
+
+    <!-- 3. Review Station Biome -->
+    <section id="biome-station" class="biome-section" style="top: 200vh;">
+      <div class="biome-card world-interactable" onclick="app.interactMailbox()">
+        <h2>📮 Echo Post Station</h2>
+        <p>Incoming review letters are received here. Walk up to the Post Office door to enter the postal room!</p>
+        <button class="pixel-btn" onclick="app.interactMailbox()">
+          📜 Inspect Review Mailbox
+        </button>
+      </div>
+    </section>
+
+    <!-- 4. Research Laboratory Biome -->
+    <section id="biome-lab" class="biome-section" style="top: 300vh;">
+      <div class="biome-card world-interactable" onclick="app.openLabTerminal()">
+        <h2>🧪 Ancient Research Laboratory</h2>
+        <p>The heart of sentiment analysis. Enter the Main Laboratory door or ignite the ML Terminal!</p>
+        <button class="pixel-btn pixel-btn-primary" onclick="app.openLabTerminal()">
+          🔥 Enter Alchemical ML Terminal
+        </button>
+      </div>
+    </section>
+
+    <!-- 5. Emotion Engine Shrine -->
+    <section id="biome-emotion" class="biome-section" style="top: 400vh;">
+      <div class="biome-card">
+        <h2>🔮 Visual Manifestation Shrine</h2>
+        <p>Analyzed review sentiments react dynamically here. Enter the Temple Shrine door to inspect the Core!</p>
+        <div id="current-shrine-status" style="margin-top: 10px; font-family: var(--font-pixel); font-size: 10px; color: var(--color-positive);">
+          Current State: Neutral Ether Energy Active
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. Analytics Observatory Biome -->
+    <section id="biome-observatory" class="biome-section" style="top: 500vh;">
+      <div class="biome-card" style="max-width: 1000px; width: 90vw;">
+        <h2>🔭 Analytics Observatory</h2>
+        <p>Enter the Observatory Deck door or inspect charts below.</p>
+        
+        <div class="observatory-grid">
+          <div class="chart-card">
+            <h4>Polarity Distribution</h4>
+            <div style="height: 190px;"><canvas id="observatory-donut-canvas"></canvas></div>
+          </div>
+
+          <div class="chart-card">
+            <h4>Confidence Histogram</h4>
+            <div style="height: 190px;"><canvas id="observatory-histogram-canvas"></canvas></div>
+          </div>
+
+          <div class="chart-card" style="height: auto; min-height: 220px;">
+            <h4>Confusion Matrix (Scikit-Learn)</h4>
+            <div id="confusion-matrix-grid" style="margin-top: 8px;"></div>
+          </div>
+
+          <div class="chart-card" style="height: auto; min-height: 220px;">
+            <h4>Sentiment Feature Word Cloud</h4>
+            <div id="aspect-word-cloud" style="margin-top: 8px; height: 160px;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. Credits Biome -->
+    <section id="biome-credits" class="biome-section" style="top: 600vh;">
+      <div class="biome-card">
+        <h2>🏰 Spire Horizon</h2>
+        <p><strong>Sentiment Analysis of Reviews</strong></p>
+        <p style="font-size: 12px; margin-top: 8px;">Crafted as an Indie Pixel-Art Interactive Machine Learning Experience.</p>
+        <div style="margin-top: 16px; font-family: var(--font-pixel); font-size: 9px; color: var(--neon-magenta);">
+          Tech Stack: Python Flask | Scikit-Learn | TF-IDF | NLTK | GSAP | Lenis | Chart.js
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Modal Overlay -->
+  <div id="modal-overlay" class="modal-overlay">
+    
+    <!-- NPC Dialogue Modal -->
+    <div id="dialogue-modal" class="pixel-panel dialogue-modal" style="display: none;">
+      <div id="dialogue-speaker-avatar" class="dialogue-avatar">🧙‍♂️</div>
+      <div class="dialogue-content">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div id="dialogue-speaker-name" class="dialogue-name">Elder Oracle</div>
+          <div id="dialogue-page-counter" style="font-family: var(--font-pixel); font-size: 9px; color: var(--neon-cyan);">Page 1 of 3</div>
+        </div>
+        
+        <div id="dialogue-text-body" class="dialogue-text">...</div>
+        
+        <div style="margin-top: 16px; display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-family: var(--font-pixel); font-size: 8px; color: var(--text-muted);">Press [Space / E] for Next Page</span>
+          <button class="pixel-btn pixel-btn-primary" onclick="app.closeModals()">Close (ESC)</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Laboratory ML Terminal Modal -->
+    <div id="lab-modal" class="pixel-panel lab-modal" style="display: none;">
+      <div class="pixel-panel-header">
+        <span>🧪 ALCHEMICAL SENTIMENT FORGE (ML ENGINE)</span>
+        <button style="background:none; border:none; color:var(--neon-magenta); font-size:16px; cursor:pointer;" onclick="app.closeModals()">✖</button>
+      </div>
+
+      <div style="padding: 16px;">
+        <label style="font-family: var(--font-pixel); font-size: 10px; color: var(--text-pixel-gold); display: block; margin-bottom: 8px;">
+          Enter Review Text to Analyze:
+        </label>
+        
+        <textarea id="review-input" class="lab-input-box" placeholder="Type or paste any product, movie, or service review here..."></textarea>
+
+        <div style="margin-top: 10px;">
+          <span style="font-family: var(--font-pixel); font-size: 8px; color: var(--text-muted);">Quick Sample Presets:</span>
+          <div id="presets-chips" class="presets-container"></div>
+        </div>
+
+        <div style="display: flex; gap: 12px; margin-top: 16px;">
+          <button class="pixel-btn pixel-btn-primary" onclick="app.analyzeInputText()">
+            🔥 Ignite Sentiment Analysis
+          </button>
+          <label class="pixel-btn" style="cursor: pointer;">
+            📂 Upload Batch CSV/JSON
+            <input type="file" id="batch-file-input" style="display: none;" onchange="app.handleBatchFileUpload(event)">
+          </label>
+        </div>
+
+        <!-- Sentiment Output Card -->
+        <div id="sentiment-result-card" class="sentiment-result-card">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div id="result-polarity-badge" class="polarity-badge Positive">POSITIVE</div>
+            <div id="result-confidence-score" style="font-family: var(--font-pixel); font-size: 11px; color: var(--neon-cyan);">
+              Confidence: 94.8%
+            </div>
+          </div>
+          
+          <div id="result-engine-used" style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">
+            Engine: TF-IDF + Scikit-Learn Classifier
+          </div>
+
+          <div style="font-family: var(--font-pixel); font-size: 9px; color: var(--text-pixel-gold); margin-top: 10px;">
+            Key Sentiment Aspect Runes:
+          </div>
+          <div id="result-aspect-runes" class="rune-grid"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Single Source of Truth World State & Scene Manager -->
+  <script src="js/engine/worldState.js"></script>
+  <script src="js/engine/sceneManager.js"></script>
+
+  <!-- Phase 4 Interior & Lighting Systems -->
+  <script src="js/engine/lightingSystem.js"></script>
+  <script src="js/engine/transitionManager.js"></script>
+  <script src="js/engine/cameraEffects.js"></script>
+  <script src="js/engine/buildings/buildingSystem.js"></script>
+  <script src="js/engine/interiors/interiorRenderer.js"></script>
+
+  <!-- Modular Renderers -->
+  <script src="js/engine/renderers/skyRenderer.js"></script>
+  <script src="js/engine/renderers/parallaxRenderer.js"></script>
+  <script src="js/engine/renderers/biomeRenderer.js"></script>
+  <script src="js/engine/renderers/particleSystem.js"></script>
+  
+  <!-- Phase 3 NPC & Object Systems -->
+  <script src="js/engine/npcs/dialogueData.js"></script>
+  <script src="js/engine/npcs/npcRenderer.js"></script>
+  <script src="js/engine/npcs/npcSystem.js"></script>
+  <script src="js/engine/worldObjects.js"></script>
+
+  <!-- Character System 2.0 -->
+  <script src="js/engine/character/spriteController.js"></script>
+  <script src="js/engine/character/cameraSystem.js"></script>
+  <script src="js/engine/characterSystem.js"></script>
+
+  <script src="js/engine/interactionSystem.js"></script>
+  <script src="js/engine/dialogueSystem.js"></script>
+  <script src="js/components/observatoryCharts.js"></script>
+  
+  <!-- Phase 6 World Reaction Engine -->
+  <script src="js/engine/worldReactionEngine.js"></script>
+  <script src="js/engine/worldEngine.js"></script>
+
+  <!-- Application Entrypoint -->
+  <script src="js/app.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,170 @@
+/* Pixel Base & Global Tokens - Realm of Echoes: The Sentiment Oracle */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Press+Start+2P&family=VT323&display=swap');
+
+:root {
+  /* Color Palette - Synthwave Pixel Fantasy */
+  --bg-deep-space: #0a0d14;
+  --bg-dark-slate: #101424;
+  --panel-glass: rgba(18, 22, 38, 0.85);
+  --panel-border: rgba(224, 64, 251, 0.3);
+  --panel-border-glow: rgba(0, 229, 255, 0.5);
+
+  /* Neon Sentiment Glows */
+  --neon-cyan: #00e5ff;
+  --neon-magenta: #e040fb;
+  --neon-amber: #ffb300;
+  
+  /* Sentiment Polarity Tokens */
+  --color-positive: #00e676;
+  --color-positive-glow: rgba(0, 230, 118, 0.4);
+  --color-negative: #ff1744;
+  --color-negative-glow: rgba(255, 23, 68, 0.4);
+  --color-neutral: #ffc400;
+  --color-neutral-glow: rgba(255, 196, 0, 0.4);
+
+  /* Text & Fonts */
+  --font-pixel: 'Press Start 2P', monospace;
+  --font-terminal: 'VT323', monospace;
+  --font-sans: 'Outfit', system-ui, -apple-system, sans-serif;
+
+  --text-main: #f0f4f8;
+  --text-muted: #94a3b8;
+  --text-pixel-gold: #ffe082;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+}
+
+html, body {
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background-color: var(--bg-deep-space);
+  color: var(--text-main);
+  font-family: var(--font-sans);
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* CRT Scanline Overlay */
+body::before {
+  content: " ";
+  display: block;
+  position: fixed;
+  top: 0; left: 0; bottom: 0; right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+  background-size: 100% 4px;
+  z-index: 900;
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-deep-space);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--neon-magenta);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--neon-cyan);
+}
+
+/* Glassmorphism Panel Class */
+.pixel-panel {
+  background: var(--panel-glass);
+  border: 2px solid var(--panel-border);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), inset 0 0 12px rgba(224, 64, 251, 0.15);
+  backdrop-filter: blur(12px);
+  border-radius: 8px;
+  position: relative;
+}
+
+.pixel-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 2px solid var(--panel-border);
+  font-family: var(--font-pixel);
+  font-size: 11px;
+  color: var(--neon-cyan);
+  letter-spacing: 1px;
+}
+
+/* Pixel Button Base */
+.pixel-btn {
+  background: linear-gradient(185deg, #2a1b4e, #140c28);
+  border: 2px solid var(--neon-magenta);
+  color: var(--text-main);
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  padding: 10px 16px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.2);
+}
+
+.pixel-btn:hover {
+  border-color: var(--neon-cyan);
+  color: var(--neon-cyan);
+  box-shadow: 0 0 16px var(--neon-cyan);
+  transform: translateY(-2px);
+}
+
+.pixel-btn:active {
+  transform: translateY(1px);
+}
+
+.pixel-btn-primary {
+  background: linear-gradient(135deg, var(--neon-magenta), #6a1b9a);
+  border-color: #ff80ab;
+}
+
+.pixel-btn-primary:hover {
+  background: linear-gradient(135deg, var(--neon-cyan), #00838f);
+  border-color: #80d8ff;
+  color: #fff;
+}
+
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(5, 7, 15, 0.82);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}

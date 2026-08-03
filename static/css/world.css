@@ -1,0 +1,360 @@
+/* World Layout & Biome Styling - Realm of Echoes */
+
+#game-container {
+  position: relative;
+  width: 100%;
+  min-height: 700vh; /* Continuous scrolling height across 7 biomes */
+  background: var(--bg-deep-space);
+}
+
+/* Fixed Canvas Viewport */
+#viewport-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Fixed Top HUD Bar */
+.game-top-bar {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 48px);
+  max-width: 1200px;
+  z-index: 500;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background: var(--panel-glass);
+  border: 2px solid var(--panel-border);
+  border-radius: 8px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.7);
+}
+
+.game-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-pixel);
+  font-size: 13px;
+  color: var(--neon-cyan);
+  text-shadow: 0 0 10px var(--neon-cyan);
+}
+
+.game-title-icon {
+  width: 24px;
+  height: 24px;
+  background: var(--neon-magenta);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: #fff;
+  box-shadow: 0 0 12px var(--neon-magenta);
+}
+
+.biome-tracker {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.biome-step {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  padding: 6px 10px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-muted);
+  transition: all 0.3s ease;
+}
+
+.biome-step.active {
+  background: rgba(224, 64, 251, 0.2);
+  border-color: var(--neon-magenta);
+  color: var(--neon-cyan);
+  box-shadow: 0 0 10px rgba(224, 64, 251, 0.4);
+}
+
+/* Scroll Progress Bar at top */
+.scroll-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--neon-magenta), var(--neon-cyan), var(--color-positive));
+  z-index: 999;
+  width: 0%;
+  box-shadow: 0 0 10px var(--neon-cyan);
+}
+
+/* Scroll Content Biome Anchors */
+.biome-section {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 80px 40px;
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* Interactive Element World Markers */
+.world-interactable {
+  pointer-events: all;
+  position: relative;
+  cursor: pointer;
+}
+
+.interact-prompt {
+  position: absolute;
+  top: -45px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--neon-magenta);
+  color: #fff;
+  font-family: var(--font-pixel);
+  font-size: 9px;
+  padding: 6px 12px;
+  border-radius: 4px;
+  white-space: nowrap;
+  box-shadow: 0 0 12px var(--neon-magenta);
+  animation: promptPulse 1.5s infinite alternate ease-in-out;
+}
+
+@keyframes promptPulse {
+  0% { transform: translateX(-50%) translateY(0); box-shadow: 0 0 8px var(--neon-magenta); }
+  100% { transform: translateX(-50%) translateY(-6px); box-shadow: 0 0 16px var(--neon-cyan); background: var(--neon-cyan); }
+}
+
+/* Biome Titles & Overlay Cards */
+.biome-card {
+  pointer-events: all;
+  max-width: 550px;
+  padding: 24px;
+  text-align: center;
+  background: var(--panel-glass);
+  border: 2px solid var(--panel-border);
+  border-radius: 12px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.8);
+}
+
+.biome-card h2 {
+  font-family: var(--font-pixel);
+  font-size: 16px;
+  color: var(--neon-cyan);
+  margin-bottom: 12px;
+  text-shadow: 0 0 12px var(--neon-cyan);
+}
+
+.biome-card p {
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+/* Dialogue Box */
+.dialogue-modal {
+  width: 600px;
+  max-width: 90vw;
+  padding: 24px;
+  display: flex;
+  gap: 20px;
+}
+
+.dialogue-avatar {
+  width: 72px;
+  height: 72px;
+  background: #1e1b4b;
+  border: 2px solid var(--neon-magenta);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  box-shadow: 0 0 12px var(--neon-magenta);
+  flex-shrink: 0;
+}
+
+.dialogue-content {
+  flex-grow: 1;
+}
+
+.dialogue-name {
+  font-family: var(--font-pixel);
+  font-size: 12px;
+  color: var(--text-pixel-gold);
+  margin-bottom: 8px;
+}
+
+.dialogue-text {
+  font-family: var(--font-terminal);
+  font-size: 20px;
+  line-height: 1.4;
+  color: var(--text-main);
+  min-height: 60px;
+}
+
+/* Laboratory Terminal Modal */
+.lab-modal {
+  width: 800px;
+  max-width: 92vw;
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 24px;
+}
+
+.lab-input-box {
+  width: 100%;
+  height: 120px;
+  background: rgba(10, 13, 20, 0.9);
+  border: 2px solid var(--panel-border);
+  border-radius: 6px;
+  color: var(--text-main);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  padding: 14px;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.lab-input-box:focus {
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 12px rgba(0, 229, 255, 0.3);
+}
+
+.presets-container {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 12px 0;
+}
+
+.preset-chip {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--text-muted);
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.preset-chip:hover {
+  border-color: var(--neon-magenta);
+  color: var(--neon-magenta);
+  background: rgba(224, 64, 251, 0.1);
+}
+
+/* Result Sentiment Card */
+.sentiment-result-card {
+  margin-top: 16px;
+  padding: 16px;
+  border-radius: 8px;
+  background: rgba(0,0,0,0.4);
+  border: 2px solid var(--neon-cyan);
+  display: none;
+}
+
+.sentiment-result-card.active {
+  display: block;
+}
+
+.polarity-badge {
+  font-family: var(--font-pixel);
+  font-size: 14px;
+  padding: 6px 14px;
+  border-radius: 4px;
+  display: inline-block;
+  margin-bottom: 8px;
+}
+
+.polarity-badge.Positive {
+  background: var(--color-positive-glow);
+  color: var(--color-positive);
+  border: 1px solid var(--color-positive);
+}
+
+.polarity-badge.Negative {
+  background: var(--color-negative-glow);
+  color: var(--color-negative);
+  border: 1px solid var(--color-negative);
+}
+
+.polarity-badge.Neutral {
+  background: var(--color-neutral-glow);
+  color: var(--color-neutral);
+  border: 1px solid var(--color-neutral);
+}
+
+/* Aspect Runes Grid */
+.rune-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.rune-chip {
+  font-family: var(--font-pixel);
+  font-size: 9px;
+  padding: 6px 10px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--panel-border);
+}
+
+.rune-chip.positive {
+  border-color: var(--color-positive);
+  color: var(--color-positive);
+}
+
+.rune-chip.negative {
+  border-color: var(--color-negative);
+  color: var(--color-negative);
+}
+
+/* Observatory Interior */
+.observatory-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin-top: 16px;
+}
+
+@media (max-width: 768px) {
+  .observatory-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.chart-card {
+  padding: 16px;
+  background: rgba(10, 14, 26, 0.8);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  height: 260px;
+}
+
+.chart-card h4 {
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  color: var(--neon-cyan);
+  margin-bottom: 12px;
+}
